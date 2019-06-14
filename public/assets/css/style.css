@@ -1,0 +1,60 @@
+html {
+    background: #283A6D;
+}
+
+nav {
+    background-color: #283A6D;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.nav-link::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 3px;
+    background: white;
+    transition: width 0.3s;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+    transition: width 0.3s;
+}
+
+.navbar-brand {
+    color: white;
+    font-weight: bold;
+}
+
+.nav-link:hover, .navbar-brand:hover {
+    color: white;
+}
+
+.nav-item {
+    color: #283A6D;
+}
+
+.clear,
+.scrape {
+    margin: 3px;
+}
+
+.clear:hover,
+.scrape:hover {
+    cursor: pointer;
+}
+
+.main-row {
+    background: #283A6D;
+    padding-right: 100px;
+    padding-left: 100px;
+}
+
+.articles-container {
+    background: #304586;
+}
