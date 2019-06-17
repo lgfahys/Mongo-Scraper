@@ -39,13 +39,17 @@ nav {
     color: #283A6D;
 }
 
-.clear,
-.scrape {
+.navbar-toggler-icon {
+    background: url("https://mdbootstrap.com/img/svg/hamburger7.svg?color=4fd7f9") !important;
+  }
+
+#clear,
+#scrape {
     margin: 3px;
 }
 
-.clear:hover,
-.scrape:hover {
+#clear:hover,
+#scrape:hover {
     cursor: pointer;
 }
 
@@ -57,4 +61,10 @@ nav {
 
 .articles-container {
     background: #304586;
+    padding: 10px;
+}
+
+li.list-group-item.active {
+    background-color: #4fd7f9;
+    border: none;
 }
