@@ -28,7 +28,7 @@ function renderSavedArticles() {
         "<ul class='list-group'>" +
         "<a href='" + data[i].link + "'>" +
         "<li class='list-group-item active' id='article-title'>" + data[i].title + "</a>" + "<button class='btn btn-success float-right' id='add-note' data-toggle='modal' data-target='#add-note-modal' data-id=" + data[i]._id + ">Add/View Note</button>" +
-        "<button class='btn btn-danger float-right' id='delete-article' data-id=" + data[i]._id + ">Delete</button></li>" +
+        "<button class='btn btn-danger float-right' style='margin-right: 10px' id='delete-article' data-id=" + data[i]._id + ">Delete</button></li>" +
         "<li class='list-group-item' id='article-subtitle'>" + data[i].summary + "</li>" +
         "</ul>" +
         "</div>" +
@@ -102,25 +102,20 @@ $(document).on("click", "#savenote", function () {
     }
   })
     .then(function (data) {
-      // Empty the notes section
-      console.log(data.note);
-      $("#notes").empty();
-      alert("Note Saved!");
+      // Get all our notes associated with thearticle
+      $.ajax({
+        method: "GET",
+        url: "/articles/" + thisId
+      }).then(function (data){
+        console.log(data);
+        $("#saved-notes").empty();
+        for (var i = 0; i < data.note.length; i++) {
+          $("#saved-notes").append("<div class=row style='margin-right: 30px; margin-left: 30px; margin-top: 5px;'><p style='color: grey; margin-right: 5px;'>" + data.note[i].body + "</p><button class='btn btn-danger'>x</button></div>");
+        }
+        alert("Note Saved!");
+      })
     });
 });
-
-// When you click the delete note button
-// $(document).on('click', '.delete-note', function (data){
-//   console.log($(this).data())
-//   console.log($(this))
-//   var thisId = $(this).attr("data-id");
-//   console.log(thisId);
-//   $.ajax(`/note/${thisId}`, {
-//       type: "DELETE"
-//   }).then(function () {
-//       // $("#saved-notes").remove($(this))
-//   });
-// });
 
 // Whenever someone clicks the add note button tag
 $(document).on("click", "#add-note", function () {
@@ -136,16 +131,18 @@ $(document).on("click", "#add-note", function () {
   })
     // With that done, add the note information to the page
     .then(function (data) {
-      // The title of the article
-      $("#notes").append("<h3 style='color: #4fd7f9'>Add notes for " + data.title + "</h3>");
-      // A textarea to add a new note body
-      $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
-      // A button to submit a new note, with the id of the article saved to it
-      $("#notes").append("<br><button class='btn btn-success' data-id='" + data._id + "' id='savenote'>Save Note</button>");
+      // emptying the saved notes div and then displaying all notes
+      $("#saved-notes").empty();
       for (var i = 0; i < data.note.length; i++) {
-        $("#saved-notes").append("<p style='color: white'>" + data.note[i].body + "</p><button class='btn btn-danger'>x</button>");
+        $("#saved-notes").append("<div class=row style='margin-right: 30px; margin-left: 30px; margin-top: 5px;'><p style='color: grey; margin-right: 5px;'>" + data.note[i].body + "</p><button class='btn btn-danger'>x</button></div>");
       }
-
+      // The title of the article
+      $("#note-modal-title").empty();
+      $("#note-modal-title").append("Notes for: " + data.title);
+      // A button to submit a new note, with the id of the article saved to it
+      $(".modal-footer").empty();
+      $(".modal-footer").append("<button type= button class='btn btn-secondary' data-dismiss='modal'>Close</button>")
+      $(".modal-footer").append("<button type= button class='btn btn-success' id='savenote' data-id ='" + data._id + "'>Save note</button>");
     });
 });
 

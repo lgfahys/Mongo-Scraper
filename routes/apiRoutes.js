@@ -138,12 +138,4 @@ app.get("/clear", function(req, res) {
     });
 });
 
-// Route for getting all the notes
-app.get("/notes", function(req, res) {
-    db.Note.find({})
-    .then(function (dbNote) {
-        res.json(dbNote);
-    })
-});
-
 module.exports = app;
