@@ -17,7 +17,7 @@ function renderArticles() {
       )
     }
   });
-}
+};
 
 // Grab the saved articles as a json and render them on the screen
 function renderSavedArticles() {
@@ -36,7 +36,7 @@ function renderSavedArticles() {
       )
     }
   });
-}
+};
 
 // Creating a load page function to determine what to display
 function loadPage() {
@@ -47,12 +47,12 @@ function loadPage() {
       emptyMessage();
     }
   });
-}
+};
 
 // Creating a function to display that there are no articles to read
 function emptyMessage() {
   $("#articles").append("<h2 style='color: #283A6D'>There are no articles to read. Scrape some!</h2>")
-}
+};
 
 // When user clicks the 'save article' button
 $(document).on("click", "#save-article", function (data) {
@@ -61,7 +61,7 @@ $(document).on("click", "#save-article", function (data) {
   console.log(thisId)
   $.ajax({
     method: "GET",
-    url: `/save/${thisId}`,
+    url: "/save/" + thisId,
   }).then(function () {
     alert("Article Saved!");
     loadPage();
@@ -106,13 +106,14 @@ $(document).on("click", "#savenote", function () {
       $.ajax({
         method: "GET",
         url: "/articles/" + thisId
-      }).then(function (data){
+      }).then(function (data) {
         console.log(data);
         $("#saved-notes").empty();
         for (var i = 0; i < data.note.length; i++) {
-          $("#saved-notes").append("<div class=row style='margin-right: 30px; margin-left: 30px; margin-top: 5px;'><p style='color: grey; margin-right: 5px;'>" + data.note[i].body + "</p><button class='btn btn-danger'>x</button></div>");
+          $("#saved-notes").append("<div class=row style='margin-right: 30px; margin-left: 30px; margin-top: 5px;'><p style='color: grey; margin-right: 5px;'>" + data.note[i].body + "</p><button class='btn btn-danger delete-note' data-dismiss='modal' data-id=" + data.note[i]._id + ">x</button></div>");
         }
         alert("Note Saved!");
+        $("#bodyinput").val('')
       })
     });
 });
@@ -134,9 +135,9 @@ $(document).on("click", "#add-note", function () {
       // emptying the saved notes div and then displaying all notes
       $("#saved-notes").empty();
       for (var i = 0; i < data.note.length; i++) {
-        $("#saved-notes").append("<div class=row style='margin-right: 30px; margin-left: 30px; margin-top: 5px;'><p style='color: grey; margin-right: 5px;'>" + data.note[i].body + "</p><button class='btn btn-danger'>x</button></div>");
+        $("#saved-notes").append("<div class=row style='margin-right: 30px; margin-left: 30px; margin-top: 5px;'><p style='color: grey; margin-right: 5px;'>" + data.note[i].body + "</p><button class='btn btn-danger delete-note' data-dismiss='modal' data-id=" + data.note[i]._id + ">x</button></div>");
       }
-      // The title of the article
+      // // The title of the article
       $("#note-modal-title").empty();
       $("#note-modal-title").append("Notes for: " + data.title);
       // A button to submit a new note, with the id of the article saved to it
@@ -146,15 +147,37 @@ $(document).on("click", "#add-note", function () {
     });
 });
 
-    // $(document).on("click", ".deletenote", function() {
-    //     event.preventDefault();
-    //     let thisId = $(this).attr("data-id");
+// When user clicks the delete note button
+$(document).on("click", ".delete-note", function () {
+  event.preventDefault();
+  let thisId = $(this).attr("data-id");
+  $.ajax({
+    method: "GET",
+    url: "/notes/" + thisId
+  })
+    .then(function (data) {
+      alert("Note Deleted!");
+    });
+});
 
-    //     $.ajax({
-    //         method: "PUT",
-    //         url: "/notes/" + thisId
-    //     })
-    //     .then(function(data) {
-    //         console.log(data);
-    //         $(this).empty();
-    //     });
+// When user clicks the delete article button
+$(document).on("click", "#delete-article", function () {
+  event.preventDefault();
+  let thisId = $(this).attr("data-id");
+  console.log(thisId)
+  $.ajax({
+    method: "GET",
+    url: "/articles/saved/" + thisId
+  })
+    .then(function (data) {
+      alert("Article Deleted!");
+      $("#saved-articles").empty();
+      $.ajax({
+        method: "GET",
+        url: "/articles/saved"
+      })
+        .then(function () {
+          renderSavedArticles();
+        })
+    });
+});
