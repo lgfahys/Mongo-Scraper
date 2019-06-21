@@ -7,7 +7,8 @@ var ArticleSchema = new Schema({
 
   title: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
 
   link: {
@@ -20,10 +21,15 @@ var ArticleSchema = new Schema({
     required: true
   },
 
-  note: {
+  saved: {
+    type: Boolean,
+    default: false
+  },
+
+  note: [{
     type: Schema.Types.ObjectId,
     ref: "Note"
-  }
+  }]
 });
 
 // Create our model from the above schema
@@ -31,3 +37,4 @@ var Article = mongoose.model("Article", ArticleSchema);
 
 // Export the Article model
 module.exports = Article;
+
